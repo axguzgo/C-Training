@@ -84,6 +84,18 @@ int add (list_t *list, int val){
     return 0;       
 }
 
+/*Return next element on a list*/
+struct Node *getNext(node_t *node){
+    node_t *aux=NULL;
+    aux=node->next;
+    return aux;
+}
+
+/*Return previous element on a list*/
+struct Node *getPrev(node_t *node){
+    node_t *aux=NULL;
+    aux=node->prev;
+}
 /*Prints a list*/
 void showList(list_t *list){
     if (list->head!=NULL)
@@ -180,5 +192,9 @@ void main(void){
     printf("Let's delete number 10 in list 2\n");
     removeElement(list2,10);
     showList(list2);
+    printf("Show 1 next element:\n");
+    printf("%d\n",getNext(list1->head)->value);
+    printf("Show 1 previous element:\n");
+    printf("%d\n",getPrev(list1->head)->value);
 
 }
