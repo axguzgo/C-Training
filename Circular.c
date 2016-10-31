@@ -105,25 +105,54 @@ struct Node *findElement(list_t *list, int element){
 
     /*If not empty list*/
     if (list->head != NULL)
-    {
+    {   aux=list->head;
+        
         if(aux->value==element)
         {   found=true;
         }
-        while ( (aux != list->head) && (!found) ) 
-        {   aux=aux->next;
+        for(aux=aux->next; aux != list->head; aux=aux->next)
+        {   
             if (aux->value==element)
             {   found=true;
+                break;
             }
+
+        }
+        if(!found)
+        {    aux=NULL;
         }
     }
     return aux;
 }
-
+/*Removes first ocurrence of specified element in a list*/
 int removeElement(list_t *list, int element){
+    bool ret = false;
+    node_t *aux=findElement(list,element);
+    
+    if(aux != NULL)
+    {
+        if (aux == list->head)
+        {   
+            /*One element list*/
+            if(aux->next==aux)
+            {list->head=NULL;
+            }
+            else
+            {
+            list->head=aux->next;
+            }
+        }
+        aux->prev->next=aux->next;
+        aux->next->prev=aux->prev;
+        free(aux);
+        ret=true;
+    }
+    
+    return ret;
 }
 
 void main(void){
-    printf("Crating new list\n");
+    printf("Creating new list\n");
     list_t * list1 = malloc(sizeof(list_t));
     list_t * list2 = malloc(sizeof(list_t));
     //list1->head=NULL;-->Preguntar DUDA
@@ -139,9 +168,17 @@ void main(void){
     showList(list1);
     printf("Show list 2:\n");
     showList(list2);
-    printf("Let's serach for 21 value in list 1\n");
-    printf("Adress of serached node is %d\n", (int) findElement(list1,21));
-    printf("Let's serach for 21 value in list 2\n");
-    printf("Adress of serached node is %d\n", (int) findElement(list2,21));
+    printf("Let's delete number 3 in list 1\n");
+    removeElement(list1,3);
+    showList(list1);
+    printf("Let's delete number 31 in list 2\n");
+    removeElement(list2,31);
+    showList(list2);
+    printf("Let's delete number 21 in list 2\n");
+    removeElement(list2,21);
+    showList(list2);
+    printf("Let's delete number 10 in list 2\n");
+    removeElement(list2,10);
+    showList(list2);
 
 }
