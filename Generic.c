@@ -74,29 +74,35 @@ int add (list_t *list, void * data){
     {
         return -1;  
     }
-    /*Set value of new node*/
     new->data = malloc(list->elementSize);
+    /*If  malloc error, must stop*/
     if (new ==NULL)
     {
         return -1;
     }
-    
+    /*Set value of new node*/    
     memcpy(new->data, data,list->elementSize);                 
     /*Empty list*/  
     if (list->head == NULL)
     {
-        list->head=new;             /*New node is the head of list*/
+        /*New node is the head of list*/
+        list->head=new;             
         new->prev=new;          
         new->next=new;
     }
     /*General case*/
     else
     {
-        node_t *aux=list->head->prev;       /*Temp varibale. Holds  last elmeent in the list*/
-        aux->next=new;              /*Last element now points to  new element */
-        new->prev=aux;              /*New element points to the last in the list*/
-        list->head->prev=new;           /*Head prev set to the new added elmeent*/
-        new->next=list->head;           /*New element points to head, so it becomes the last in the list*/
+        /*Temp varibale. Holds  last elmeent in the list*/
+        node_t *aux=list->head->prev;   
+        /*Last element now points to  new element */          
+        aux->next=new;             
+        /*New element points to the last in the list*/
+        new->prev=aux;                 
+        /*Head prev set to the new added elmeent*/    
+        list->head->prev=new; 
+        /*New element points to head, so it becomes the last in the list*/
+        new->next=list->head;           
     }
     return 0;       
 }
@@ -112,6 +118,7 @@ struct Node *getNext(node_t *node){
 struct Node *getPrev(node_t *node){
     node_t *aux=NULL;
     aux=node->prev;
+    return aux;
 }
 /*Prints a list*/
 void showList(list_t *list){
@@ -190,6 +197,10 @@ void printInt(void *data){
     printf ("Value: %d\n",*(int *)data);
 }
 
+void printDouble(void *data){
+    printf ("Values: %f\n",*(double *)(data));
+}
+
 
 void main(void){
     printf("Creating new int list\n");
@@ -204,4 +215,18 @@ void main(void){
     add(list1,&c);
     printf("Print list acordding print function specified...\n");  
     showList(list1);
+
+    printf("Creating new double list\n");
+    list_t *list2=malloc(sizeof(list_t));
+    new_List(list2,sizeof(double),&printDouble);
+    double d=1.234;
+    double e=2.312;
+    double f=3.141516; 
+    printf("Adding elements 1,2,3.. to list 1\n");
+    add(list1,&d);
+    add(list1,&e);
+    add(list1,&f);
+    printf("Print list acordding print function specified...\n");  
+    showList(list2);
+
 }
