@@ -41,7 +41,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef void (*printfunction)(void *);
 
 typedef struct Node 
 {
@@ -50,19 +49,27 @@ typedef struct Node
     struct Node *next;
 } node_t;
 
+
+typedef void (*printFunction)(void *);
+typedef int  (*compareFunction)(node_t * , node_t *);
+
 typedef struct List
 {
     struct Node *head;
     int elementSize; 
-    printfunction print;
+    printFunction print;
+    compareFunction compare;
 } list_t;
 
 
+
+
 /*Creates a nwe Generic list with the specified data type*/
-void new_List(list_t * list, size_t size,printfunction print ){
+void new_List(list_t * list, size_t size,printFunction print, compareFunction compare ){
     list->head=NULL;
     list->elementSize=size;
     list->print=print;
+    list->compare=compare;
 }
 
 /*Inserts an elmeent at  end of  given list.Returns 0 if succesful, -1 otherwise.*/
@@ -120,6 +127,7 @@ struct Node *getPrev(node_t *node){
     aux=node->prev;
     return aux;
 }
+
 /*Prints a list*/
 void showList(list_t *list){
     if (list->head!=NULL)
@@ -136,21 +144,22 @@ void showList(list_t *list){
 }
 
 
-/*Return a pointer to first ocurrence of  given element. Returns NULL if not exists.
-struct Node *findElement(list_t *list, int element){
+/*Return a pointer to first ocurrence of  given element. Returns NULL if not exists.*/
+struct Node *findElement(list_t *list, void * element){
     bool found=false;
     node_t *aux=NULL;
 
-    /*If not empty list
+    /*If not empty list*/
     if (list->head != NULL)
     {   aux=list->head;
         
-        if(aux->value==element)
-        {   found=true;
+        if(list->compare(aux->data,element))
+        {   
+             found=true;
         }
         for(aux=aux->next; aux != list->head; aux=aux->next)
         {   
-            if (aux->value==element)
+            if(list->compare(aux->data,element))
             {   found=true;
                 break;
             }
@@ -162,11 +171,11 @@ struct Node *findElement(list_t *list, int element){
     }
     return aux;
 }
-*/
 
 
-/*Removes first ocurrence of specified element in a list
-int removeElement(list_t *list, int element){
+
+/*Removes first ocurrence of specified element in a list*/
+int removeElement(list_t *list, void * element){
     bool ret = false;
     node_t *aux=findElement(list,element);
     
@@ -174,7 +183,7 @@ int removeElement(list_t *list, int element){
     {
         if (aux == list->head)
         {   
-            /*One element list
+            /*One element list*/
             if(aux->next==aux)
             {list->head=NULL;
             }
@@ -191,21 +200,32 @@ int removeElement(list_t *list, int element){
     
     return ret;
 }
-*/
+
 
 void printInt(void *data){
     printf ("Value: %d\n",*(int *)data);
 }
 
 void printDouble(void *data){
-    printf ("Values: %f\n",*(double *)(data));
+    printf ("Value: %f\n",*(double *)(data));
 }
 
+bool compareInt(void *data1, void *data2){
+        bool comp;
+        comp= *(int *)data1 == *(int *)data2;
+        return comp;
+}
+
+bool compareDouble(void *data1, void *data2){
+    bool comp;
+    comp=*(double *)data1 == *(double *)data2;
+    return comp;
+}
 
 void main(void){
-    printf("Creating new int list\n");
+    printf("Creating new int list\n"); 
     list_t *list1=malloc(sizeof(list_t));
-    new_List(list1,sizeof(int),&printInt);
+    new_List(list1,sizeof(int),&printInt,&compareInt);
     int a=1;
     int b=2;
     int c=3; 
@@ -213,20 +233,31 @@ void main(void){
     add(list1,&a);
     add(list1,&b);
     add(list1,&c);
-    printf("Print list acordding print function specified...\n");  
+    printf("Print list acordding specified print function...\n");  
     showList(list1);
 
     printf("Creating new double list\n");
     list_t *list2=malloc(sizeof(list_t));
-    new_List(list2,sizeof(double),&printDouble);
+    new_List(list2,sizeof(double),&printDouble,&compareDouble);
+    
     double d=1.234;
     double e=2.312;
     double f=3.141516; 
-    printf("Adding elements 1,2,3.. to list 1\n");
-    add(list1,&d);
-    add(list1,&e);
-    add(list1,&f);
-    printf("Print list acordding print function specified...\n");  
-    showList(list2);
 
+    printf("Adding elements  to list2 \n");
+    add(list2,&d);
+    add(list2,&e);
+    add(list2,&f);
+    printf("Print list acordding  specified print function...\n");  
+    showList(list2); 
+
+    void * pointA=&a;
+    printf("Let's remove element 1 form list1\n");
+    removeElement(list1,pointA);
+    showList(list1); 
+
+    void * pointD=&d;
+    printf("Let's remove element 1.234 form list2\n");
+    removeElement(list2,pointD);
+    showList(list2); 
 }
