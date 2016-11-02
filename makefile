@@ -12,8 +12,6 @@ Circular: Circular.c
 Generic: Generic.c
 		$(CC) -o generic Generic.c
 
-%:%.c
-		$(CC) -o $<  $@.c
 
 clean:						#allows to remove temp files
 	@echo Cleaning executable files...
