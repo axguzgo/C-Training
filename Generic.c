@@ -51,7 +51,7 @@ typedef struct Node
 
 
 typedef void (*printFunction)(void *);
-typedef int  (*compareFunction)(node_t * , node_t *);
+typedef bool  (*compareFunction)(node_t * , node_t *);
 
 typedef struct List
 {
@@ -65,7 +65,7 @@ typedef struct List
 
 
 /*Creates a nwe Generic list with the specified data type*/
-void new_List(list_t * list, size_t size,printFunction print, compareFunction compare ){
+void NewList(list_t * list, size_t size,printFunction print, compareFunction compare ){
     list->head=NULL;
     list->elementSize=size;
     list->print=print;
@@ -73,7 +73,7 @@ void new_List(list_t * list, size_t size,printFunction print, compareFunction co
 }
 
 /*Inserts an elmeent at  end of  given list.Returns 0 if succesful, -1 otherwise.*/
-int add (list_t *list, void * data){
+int Add (list_t *list, void * data){
     node_t * new = malloc(sizeof(node_t));
     new->data=NULL;
     /*If  malloc error, must stop*/
@@ -115,21 +115,21 @@ int add (list_t *list, void * data){
 }
 
 /*Return next element on a list*/
-struct Node *getNext(node_t *node){
+struct Node *GetNext(node_t *node){
     node_t *aux=NULL;
     aux=node->next;
     return aux;
 }
 
 /*Return previous element on a list*/
-struct Node *getPrev(node_t *node){
+struct Node *GetPrev(node_t *node){
     node_t *aux=NULL;
     aux=node->prev;
     return aux;
 }
 
 /*Prints a list*/
-void showList(list_t *list){
+void ShowList(list_t *list){
     if (list->head!=NULL)
     {
         node_t *pointer=list->head;
@@ -145,7 +145,7 @@ void showList(list_t *list){
 
 
 /*Return a pointer to first ocurrence of  given element. Returns NULL if not exists.*/
-struct Node *findElement(list_t *list, void * element){
+struct Node *FindElement(list_t *list, void * element){
     bool found=false;
     node_t *aux=NULL;
 
@@ -175,9 +175,9 @@ struct Node *findElement(list_t *list, void * element){
 
 
 /*Removes first ocurrence of specified element in a list*/
-int removeElement(list_t *list, void * element){
+int RemoveElement(list_t *list, void * element){
     bool ret = false;
-    node_t *aux=findElement(list,element);
+    node_t *aux=FindElement(list,element);
     
     if(aux != NULL)
     {
@@ -202,62 +202,62 @@ int removeElement(list_t *list, void * element){
 }
 
 
-void printInt(void *data){
+void PrintInt(void *data){
     printf ("Value: %d\n",*(int *)data);
 }
 
-void printDouble(void *data){
+void PrintDouble(void *data){
     printf ("Value: %f\n",*(double *)(data));
 }
 
-bool compareInt(void *data1, void *data2){
+bool CompareInt(void *data1, void *data2){
         bool comp;
         comp= *(int *)data1 == *(int *)data2;
         return comp;
 }
 
-bool compareDouble(void *data1, void *data2){
+bool CompareDouble(void *data1, void *data2){
     bool comp;
     comp=*(double *)data1 == *(double *)data2;
     return comp;
 }
 
-void main(void){
+int main(void){
     printf("Creating new int list\n"); 
     list_t *list1=malloc(sizeof(list_t));
-    new_List(list1,sizeof(int),&printInt,&compareInt);
+    NewList(list1,sizeof(int),&PrintInt,&CompareInt);
     int a=1;
     int b=2;
     int c=3; 
     printf("Adding elements 1,2,3.. to list 1\n");
-    add(list1,&a);
-    add(list1,&b);
-    add(list1,&c);
+    Add(list1,&a);
+    Add(list1,&b);
+    Add(list1,&c);
     printf("Print list acordding specified print function...\n");  
-    showList(list1);
+    ShowList(list1);
 
     printf("Creating new double list\n");
     list_t *list2=malloc(sizeof(list_t));
-    new_List(list2,sizeof(double),&printDouble,&compareDouble);
+    NewList(list2,sizeof(double),&PrintDouble,&CompareDouble);
     
     double d=1.234;
     double e=2.312;
     double f=3.141516; 
 
     printf("Adding elements  to list2 \n");
-    add(list2,&d);
-    add(list2,&e);
-    add(list2,&f);
+    Add(list2,&d);
+    Add(list2,&e);
+    Add(list2,&f);
     printf("Print list acordding  specified print function...\n");  
-    showList(list2); 
+    ShowList(list2);
 
     void * pointA=&a;
     printf("Let's remove element 1 form list1\n");
-    removeElement(list1,pointA);
-    showList(list1); 
+    RemoveElement(list1,pointA);
+    ShowList(list1);
 
     void * pointD=&d;
     printf("Let's remove element 1.234 form list2\n");
-    removeElement(list2,pointD);
-    showList(list2); 
+    RemoveElement(list2,pointD);
+    ShowList(list2);
 }
