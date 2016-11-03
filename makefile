@@ -15,7 +15,7 @@ Generic: Generic.c
 
 clean:						#allows to remove temp files
 	@echo Cleaning executable files...
-	rm circular
+	rm circular generic
 	@echo Clean done
 
 tar:						#Entrada per a generar paquet comprimit
